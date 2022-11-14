@@ -120,8 +120,7 @@ export function ApplyDiscountToAllExceptTagCard() {
       >
         <TextField
           type="text"
-          //   label="Enter tags separated by commas. Eg: 'tag1, tag2, tag3'"
-          label="Enter tag name (Case Sensitive)"
+          label="Enter tags separated by commas. Eg: 'tag1, tag2, tag3' (Case sensitive and without quotes)"
           value={tags}
           onChange={handleTagInputChange}
           autoComplete="off"

@@ -310,7 +310,7 @@ export async function createServer(
     const tagsString = req.body.tags;
     let tags = tagsString.split(",");
     tags = tags.map((t) => t.trim());
-
+    console.log(tags);
     try {
       products = await Product.all({
         session: session,
@@ -394,6 +394,7 @@ export async function createServer(
     const tagsString = req.body.tags;
     let tags = tagsString.split(",");
     tags = tags.map((t) => t.trim());
+    console.log(tags);
 
     try {
       products = await Product.all({
@@ -477,7 +478,7 @@ export async function createServer(
     const tagsString = req.body.tags;
     let tags = tagsString.split(",");
     tags = tags.map((t) => t.trim());
-    // console.log(tags);
+    console.log(tags);
 
     try {
       products = await Product.all({
@@ -559,6 +560,7 @@ export async function createServer(
     const tagsString = req.body.tags;
     let tags = tagsString.split(",");
     tags = tags.map((t) => t.trim());
+    console.log(tags);
 
     try {
       products = await Product.all({
@@ -636,6 +638,7 @@ export async function createServer(
     let totalProductsChanged = 0;
     const discount = req.body.discount / 100;
     const productName = req.body.productName.trim();
+    console.log(productName);
 
     try {
       products = await Product.all({
@@ -697,6 +700,7 @@ export async function createServer(
     let totalProductsChanged = 0;
     const discount = 0;
     const productName = req.body.productName.trim();
+    console.log(productName);
 
     try {
       products = await Product.all({
