@@ -110,38 +110,38 @@ export async function createServer(
     })
   );
 
-  app.get("/api/products/count", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    const { Product } = await import(
-      `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
-    );
+  //   app.get("/api/products/count", async (req, res) => {
+  //     const session = await Shopify.Utils.loadCurrentSession(
+  //       req,
+  //       res,
+  //       app.get("use-online-tokens")
+  //     );
+  //     const { Product } = await import(
+  //       `@shopify/shopify-api/dist/rest-resources/${Shopify.Context.API_VERSION}/index.js`
+  //     );
 
-    const countData = await Product.count({ session });
-    res.status(200).send(countData);
-  });
+  //     const countData = await Product.count({ session });
+  //     res.status(200).send(countData);
+  //   });
 
-  app.get("/api/products/create", async (req, res) => {
-    const session = await Shopify.Utils.loadCurrentSession(
-      req,
-      res,
-      app.get("use-online-tokens")
-    );
-    let status = 200;
-    let error = null;
+  //   app.get("/api/products/create", async (req, res) => {
+  //     const session = await Shopify.Utils.loadCurrentSession(
+  //       req,
+  //       res,
+  //       app.get("use-online-tokens")
+  //     );
+  //     let status = 200;
+  //     let error = null;
 
-    try {
-      await productCreator(session);
-    } catch (e) {
-      console.log(`Failed to process products/create: ${e.message}`);
-      status = 500;
-      error = e.message;
-    }
-    res.status(status).send({ success: status === 200, error });
-  });
+  //     try {
+  //       await productCreator(session);
+  //     } catch (e) {
+  //       console.log(`Failed to process products/create: ${e.message}`);
+  //       status = 500;
+  //       error = e.message;
+  //     }
+  //     res.status(status).send({ success: status === 200, error });
+  //   });
 
   // All endpoints after this point will have access to a request.body
   // attribute, as a result of the express.json() middleware
@@ -177,9 +177,8 @@ export async function createServer(
         let varients = [];
         pTags = pTags.map((t) => t.trim());
         const isBundle = pTags.includes("Bundle");
-
-        varients = p.variants.map((v) => {
-          if (!isBundle) {
+        if (!isBundle) {
+          varients = p.variants.map((v) => {
             let prevPrice = v.compare_at_price;
             if (!prevPrice || prevPrice === 0.0) {
               prevPrice = v.price;
@@ -190,23 +189,19 @@ export async function createServer(
               price: (prevPrice * (1 - discount)).toString(),
               compare_at_price: prevPrice.toString(),
             };
-          } else {
-            return {
-              id: v.id,
-            };
-          }
-        });
+          });
 
-        console.log(
-          `discountAllProductsExceptBundles Updating product: ${p.title}`
-        );
-        const newP = new Product({ session: session });
-        newP.id = p.id;
-        newP.variants = varients;
-        await newP.save({
-          update: true,
-        });
-        totalProductsChanged++;
+          console.log(
+            `discountAllProductsExceptBundles Updating product: ${p.title}`
+          );
+          const newP = new Product({ session: session });
+          newP.id = p.id;
+          newP.variants = varients;
+          await newP.save({
+            update: true,
+          });
+          totalProductsChanged++;
+        }
       }
 
       console.log("done");
@@ -253,8 +248,8 @@ export async function createServer(
         pTags = pTags.map((t) => t.trim());
         const isBundle = pTags.includes("Bundle");
 
-        varients = p.variants.map((v) => {
-          if (!isBundle) {
+        if (!isBundle) {
+          varients = p.variants.map((v) => {
             let prevPrice = v.compare_at_price;
             if (!prevPrice || prevPrice === 0.0) {
               prevPrice = v.price;
@@ -265,23 +260,19 @@ export async function createServer(
               price: prevPrice.toString(),
               compare_at_price: prevPrice.toString(),
             };
-          } else {
-            return {
-              id: v.id,
-            };
-          }
-        });
+          });
 
-        console.log(
-          `resetPriceAllProductsExceptBundles Updating product: ${p.title}`
-        );
-        const newP = new Product({ session: session });
-        newP.id = p.id;
-        newP.variants = varients;
-        await newP.save({
-          update: true,
-        });
-        totalProductsChanged++;
+          console.log(
+            `resetPriceAllProductsExceptBundles Updating product: ${p.title}`
+          );
+          const newP = new Product({ session: session });
+          newP.id = p.id;
+          newP.variants = varients;
+          await newP.save({
+            update: true,
+          });
+          totalProductsChanged++;
+        }
       }
 
       console.log("done");
@@ -341,9 +332,8 @@ export async function createServer(
             updateProduct = true;
           }
         }
-
-        varients = p.variants.map((v) => {
-          if (!updateProduct) {
+        if (!updateProduct) {
+          varients = p.variants.map((v) => {
             let prevPrice = v.compare_at_price;
             if (!prevPrice || prevPrice === 0.0) {
               prevPrice = v.price;
@@ -354,23 +344,19 @@ export async function createServer(
               price: (prevPrice * (1 - discount)).toString(),
               compare_at_price: prevPrice.toString(),
             };
-          } else {
-            return {
-              id: v.id,
-            };
-          }
-        });
+          });
 
-        console.log(
-          `discountAllProductsExceptTags Updating product: ${p.title}`
-        );
-        const newP = new Product({ session: session });
-        newP.id = p.id;
-        newP.variants = varients;
-        await newP.save({
-          update: true,
-        });
-        totalProductsChanged++;
+          console.log(
+            `discountAllProductsExceptTags Updating product: ${p.title}`
+          );
+          const newP = new Product({ session: session });
+          newP.id = p.id;
+          newP.variants = varients;
+          await newP.save({
+            update: true,
+          });
+          totalProductsChanged++;
+        }
       }
 
       console.log("done");
@@ -430,9 +416,8 @@ export async function createServer(
             updateProduct = true;
           }
         }
-
-        varients = p.variants.map((v) => {
-          if (!updateProduct) {
+        if (!updateProduct) {
+          varients = p.variants.map((v) => {
             let prevPrice = v.compare_at_price;
             if (!prevPrice || prevPrice === 0.0) {
               prevPrice = v.price;
@@ -443,23 +428,19 @@ export async function createServer(
               price: prevPrice.toString(),
               compare_at_price: prevPrice.toString(),
             };
-          } else {
-            return {
-              id: v.id,
-            };
-          }
-        });
+          });
 
-        console.log(
-          `resetPriceAllProductsExceptTags Updating product: ${p.title}`
-        );
-        const newP = new Product({ session: session });
-        newP.id = p.id;
-        newP.variants = varients;
-        await newP.save({
-          update: true,
-        });
-        totalProductsChanged++;
+          console.log(
+            `resetPriceAllProductsExceptTags Updating product: ${p.title}`
+          );
+          const newP = new Product({ session: session });
+          newP.id = p.id;
+          newP.variants = varients;
+          await newP.save({
+            update: true,
+          });
+          totalProductsChanged++;
+        }
       }
 
       console.log("done");
@@ -760,8 +741,8 @@ export async function createServer(
       }% off`,
     });
   });
-
   //////////////////////////////////////// End OF CUSTOM CODE //////////////////////////////////////////////
+
   app.use((req, res, next) => {
     const shop = Shopify.Utils.sanitizeShop(req.query.shop);
     if (Shopify.Context.IS_EMBEDDED_APP && shop) {
