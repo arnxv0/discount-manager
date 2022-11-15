@@ -179,15 +179,18 @@ export async function createServer(
         const isBundle = pTags.includes("Bundle");
         if (!isBundle) {
           varients = p.variants.map((v) => {
-            let prevPrice = v.compare_at_price;
-            if (!prevPrice || prevPrice === 0.0) {
-              prevPrice = v.price;
+            let prevPrice = parseFloat(v.compare_at_price);
+            if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+              prevPrice = parseFloat(v.price);
+              if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+                prevPrice = 0;
+              }
             }
 
             return {
               id: v.id,
-              price: (prevPrice * (1 - discount)).toString(),
-              compare_at_price: prevPrice.toString(),
+              price: prevPrice * (1 - discount),
+              compare_at_price: prevPrice,
             };
           });
 
@@ -250,15 +253,18 @@ export async function createServer(
 
         if (!isBundle) {
           varients = p.variants.map((v) => {
-            let prevPrice = v.compare_at_price;
-            if (!prevPrice || prevPrice === 0.0) {
-              prevPrice = v.price;
+            let prevPrice = parseFloat(v.compare_at_price);
+            if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+              prevPrice = parseFloat(v.price);
+              if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+                prevPrice = 0;
+              }
             }
 
             return {
               id: v.id,
-              price: prevPrice.toString(),
-              compare_at_price: prevPrice.toString(),
+              price: prevPrice,
+              compare_at_price: prevPrice,
             };
           });
 
@@ -334,15 +340,18 @@ export async function createServer(
         }
         if (!updateProduct) {
           varients = p.variants.map((v) => {
-            let prevPrice = v.compare_at_price;
-            if (!prevPrice || prevPrice === 0.0) {
-              prevPrice = v.price;
+            let prevPrice = parseFloat(v.compare_at_price);
+            if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+              prevPrice = parseFloat(v.price);
+              if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+                prevPrice = 0;
+              }
             }
 
             return {
               id: v.id,
-              price: (prevPrice * (1 - discount)).toString(),
-              compare_at_price: prevPrice.toString(),
+              price: prevPrice * (1 - discount),
+              compare_at_price: prevPrice,
             };
           });
 
@@ -419,15 +428,18 @@ export async function createServer(
         }
         if (!updateProduct) {
           varients = p.variants.map((v) => {
-            let prevPrice = v.compare_at_price;
-            if (!prevPrice || prevPrice === 0.0) {
-              prevPrice = v.price;
+            let prevPrice = parseFloat(v.compare_at_price);
+            if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+              prevPrice = parseFloat(v.price);
+              if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+                prevPrice = 0;
+              }
             }
 
             return {
               id: v.id,
-              price: prevPrice.toString(),
-              compare_at_price: prevPrice.toString(),
+              price: prevPrice,
+              compare_at_price: prevPrice,
             };
           });
 
@@ -503,15 +515,18 @@ export async function createServer(
         }
         if (updateProduct) {
           varients = p.variants.map((v) => {
-            let prevPrice = v.compare_at_price;
-            if (!prevPrice || prevPrice === 0.0) {
-              prevPrice = v.price;
+            let prevPrice = parseFloat(v.compare_at_price);
+            if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+              prevPrice = parseFloat(v.price);
+              if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+                prevPrice = 0;
+              }
             }
 
             return {
               id: v.id,
-              price: (prevPrice * (1 - discount)).toString(),
-              compare_at_price: prevPrice.toString(),
+              price: prevPrice * (1 - discount),
+              compare_at_price: prevPrice,
             };
           });
 
@@ -585,15 +600,18 @@ export async function createServer(
         }
         if (updateProduct) {
           varients = p.variants.map((v) => {
-            let prevPrice = v.compare_at_price;
-            if (!prevPrice || prevPrice === 0.0) {
-              prevPrice = v.price;
+            let prevPrice = parseFloat(v.compare_at_price);
+            if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+              prevPrice = parseFloat(v.price);
+              if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+                prevPrice = 0;
+              }
             }
 
             return {
               id: v.id,
-              price: (prevPrice * (1 - discount)).toString(),
-              compare_at_price: prevPrice.toString(),
+              price: prevPrice * (1 - discount),
+              compare_at_price: prevPrice,
             };
           });
           console.log(`resetDiscountTags Updating product: ${p.title}`);
@@ -658,12 +676,17 @@ export async function createServer(
       for (let i = 0; i < varients.length; i++) {
         const v = new Variant({ session: session });
         v.id = varients[i].id;
-        let prevPrice = varients[i].compare_at_price;
-        if (!prevPrice || prevPrice === 0.0) {
-          prevPrice = varients[i].price;
+        let prevPrice = parseFloat(varients[i].compare_at_price);
+        if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+          prevPrice = parseFloat(varients[i].price);
+          if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+            prevPrice = 0;
+          }
         }
-        v.price = (prevPrice * (1 - discount)).toString();
-        v.compare_at_price = prevPrice.toString();
+        // console.log(prevPrice * (1 - discount));
+        v.price = prevPrice * (1 - discount);
+        v.compare_at_price = prevPrice;
+        console.log(v);
         await v.save({
           update: true,
         });
@@ -720,12 +743,15 @@ export async function createServer(
       for (let i = 0; i < varients.length; i++) {
         const v = new Variant({ session: session });
         v.id = varients[i].id;
-        let prevPrice = varients[i].compare_at_price;
-        if (!prevPrice || prevPrice === 0.0) {
-          prevPrice = varients[i].price;
+        let prevPrice = parseFloat(varients[i].compare_at_price);
+        if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+          prevPrice = parseFloat(varients[i].price);
+          if (!prevPrice || prevPrice === 0.0 || prevPrice === 0) {
+            prevPrice = 0;
+          }
         }
-        v.price = (prevPrice * (1 - discount)).toString();
-        v.compare_at_price = prevPrice.toString();
+        v.price = prevPrice * (1 - discount);
+        v.compare_at_price = prevPrice;
         await v.save({
           update: true,
         });
